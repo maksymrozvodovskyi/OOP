@@ -1,4 +1,4 @@
-#include <iostream> // Додано підключення бібліотеки iostream
+#include <iostream>
 #include <cmath>
 using namespace std;
 
@@ -16,11 +16,12 @@ void input_e(double& l, double& h)
 
 void calculate(double l, double h, double& volume, double& surface_area)
 {
-    const double pi = 3.14159265358979323846;
+    const double pi = 3.14;
 
-    volume = (pi * pow(l, 2) * h) / 3; // V
+    double r = l / (pi * 2);
 
-    surface_area = pi * l * sqrt(pow(l, 2) + pow(h, 2)); // S
+    volume = (pi * r * r * h) / 3; 
+    surface_area = pi * r * l; 
 }
 
 int main()
@@ -31,9 +32,9 @@ int main()
     input_e(l, h);
     calculate(l, h, volume, surface_area);
 
-    cout << "---- Founded elements -----";
-    cout << endl;
+    cout << "---- Founded elements -----" << endl;
     cout << "V: " << volume << endl;
     cout << "Surface Area: " << surface_area << endl;
-}
 
+    return 0;
+}
