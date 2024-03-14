@@ -1,0 +1,270 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Клас, що представляє многочлен
+class Polynomial
+{
+private:
+    int degree;         // Степінь многочлена
+    double* coeffs;     // Масив коефіцієнтів многочлена
+
+public:
+    // Конструктор за замовчуванням
+    Polynomial() : degree(0), coeffs(nullptr) {} // Ініціалізує степінь на 0 та масив коефіцієнтів на nullptr
+
+    // Деструктор
+    ~Polynomial()   // Відповідає за видалення динамічно виділеної пам'яті для масиву коефіцієнтів
+    {
+        delete[] coeffs;
+    }
+
+    // Метод для введення коефіцієнтів многочлена
+    void Coefficients()
+    {
+        cout << "Enter the degree of the polynomial: "; // Просимо ввести степінь многочлена
+        cin >> degree;
+
+        coeffs = new double[degree + 1];    // Виділяємо пам'ять під масив коефіцієнтів
+
+        cout << "Enter the coefficients of the polynomial (starting from the highest): "; // Просимо ввести коефіцієнти многочлена, починаючи з найвищого степеня
+        for (int i = degree; i >= 0; i--)
+        {
+            cin >> coeffs[i];
+        }
+
+        cout << "------------------------------------------------------------------------------------------------------------------------" << endl; // Помітка про завершення введення коефіцієнтів
+    }
+
+    // Метод для обчислення значення многочлена при певному значенні x
+    double Evaluate(double x)
+    {
+        double result = 0;
+        for (int i = 0; i <= degree; i++)
+        {
+            result = result + coeffs[i] * pow(x, i);
+        }
+        return result;
+    }
+
+    // Метод для виведення многочлена
+    void Print()
+    {
+        if (coeffs == nullptr)
+        {
+            cout << "Polynomial coefficients have not been entered yet." << endl;
+            return;
+        }
+
+        bool firstTermPrinted = false;
+        for (int i = degree; i >= 0; i--)
+        {
+            if (coeffs[i] != 0)
+            {
+                if (firstTermPrinted)
+                {
+                    if (coeffs[i] > 0)
+                        cout << " + ";
+                    else
+                        cout << " - ";
+                    cout << abs(coeffs[i]);
+                    if (i > 0)
+                        cout << "x^" << i;
+                }
+                else
+                {
+                    cout << coeffs[i];
+                    if (i > 0)
+                        cout << "x^" << i;
+                    firstTermPrinted = true;
+                }
+            }
+        }
+        cout << endl;
+        cout << "------------------------------------------------------------------------------------------------------------------------" << endl; // Помітка про завершення виведення многочлена
+    }
+
+    // Метод для пошуку мінімального коефіцієнта
+    double Min()
+    {
+        if (coeffs == nullptr)
+        {
+            cout << "Error: Coefficients have not been entered yet." << endl;
+            return 0;
+        }
+
+        double minCoeff = coeffs[0];
+        for (int i = 1; i <= degree; ++i)
+        {
+            if (coeffs[i] < minCoeff)
+            {
+                minCoeff = coeffs[i];
+            }
+        }
+        return minCoeff;
+    }
+
+    // Метод для пошуку максимального коефіцієнта многочлена(ів)
+    double Max()
+    {
+        if (coeffs == nullptr)
+        {
+            cout << "Error: Coefficients have not been entered yet." << endl;
+            return 0;
+        }
+
+        double maxCoeff = coeffs[0];
+        for (int i = 1; i <= degree; ++i)
+        {
+            if (coeffs[i] > maxCoeff)
+            {
+                maxCoeff = coeffs[i];
+            }
+        }
+        return maxCoeff;
+    }
+
+    // Метод для сортування коефіцієнтів многочлена(ів)
+    void SortCofs()
+    {
+        if (coeffs == nullptr)
+        {
+            cout << "Error: Coefficients have not been entered yet." << endl;
+            return;
+        }
+
+        for (int i = 0; i <= degree; ++i)
+        {
+            for (int j = 0; j < degree - i; ++j)
+            {
+                if (coeffs[j] > coeffs[j + 1])
+                {
+                    double temp = coeffs[j];
+                    coeffs[j] = coeffs[j + 1];
+                    coeffs[j + 1] = temp;
+                }
+            }
+        }
+        cout << "------------------------------------------------------------------------------------------------------------------------" << endl; // Помітка про завершення сортування
+    }
+};
+
+// Головна функція
+int main()
+{
+    Polynomial poly1, poly2;    // Створення двох многочленів
+    char choice;                // Змінна для вибору опцій
+    double x;                   // Змінна для введення значення x
+
+    cout << "===== |Polynomial Operations| ===== " << endl;
+
+    // Головний цикл програми для вибору опцій
+    do {
+        cout << "\n1. Enter coefficients for polynomial 1" << endl;
+        cout << "2. Enter coefficients for polynomial 2" << endl;
+        cout << "3. Evaluate polynomials at a point" << endl;
+        cout << "4. Find min and max coefficients" << endl;
+        cout << "5. Sort coefficients" << endl;
+        cout << "6. Perform arithmetic operations" << endl;
+        cout << "7. Exit" << endl << endl;
+
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cout << endl;
+
+        // Обробка вибору 
+        switch (choice) {
+        case '1':
+            cout << "\nEnter coefficients for polynomial 1:" << endl;
+            poly1.Coefficients();   // Введення коефіцієнтів для многочлена 1
+            cout << "Polynomial 1: ";
+            poly1.Print();          // Виведення многочлена 1
+            break;
+
+        case '2':
+            cout << "\nEnter coefficients for polynomial 2:" << endl;
+            poly2.Coefficients();   // Введення коефіцієнтів для многочлена 2
+            cout << "Polynomial 2: ";
+            poly2.Print();          // Виведення многочлена 2
+            break;
+
+        case '3':
+            cout << "Enter the value of x: ";
+            cin >> x;
+            cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+            cout << "Value at x = " << x << " for polynomial 1: " << poly1.Evaluate(x) << endl;  // Обчислення значення многочлена 1 при значенні x
+            cout << "Value at x = " << x << " for polynomial 2: " << poly2.Evaluate(x) << endl;  // Обчислення значення многочлена 2 при значенні x
+            cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+            break;
+
+        case '4':
+            cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+            cout << "Min coefficient for polynomial 1: " << poly1.Min() << endl;  // Пошук мінімального коефіцієнта для многочлена 1
+            cout << "Max coefficient for polynomial 1: " << poly1.Max() << endl;  // Пошук максимального коефіцієнта для многочлена 1
+            cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+
+            cout << endl;
+
+            cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+            cout << "Min coefficient for polynomial 2: " << poly2.Min() << endl;  // Пошук мінімального коефіцієнта для многочлена 2
+            cout << "Max coefficient for polynomial 2: " << poly2.Max() << endl;  // Пошук максимального коефіцієнта для многочлена 2
+            cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+            break;
+
+        case '5':
+            cout << "Sorting coefficients for polynomial 1..." << endl;
+            poly1.SortCofs();   // Сортування коефіцієнтів для многочлена 1
+            cout << "Sorted coefficients for polynomial 1: ";
+            poly1.Print();      // Виведення відсортованих коефіцієнтів для многочлена 1
+            cout << endl;
+            cout << "Sorting coefficients for polynomial 2..." << endl;
+            poly2.SortCofs();   // Сортування коефіцієнтів для многочлена 2
+            cout << "Sorted coefficients for polynomial 2: ";
+            poly2.Print();      // Виведення відсортованих коефіцієнтів для многочлена 2
+            break;
+
+        case '6':
+            cout << "Enter the value of x: ";
+            cin >> x;
+            cout << "Enter operation (1: Add, 2: Subtract 1 from 2, 3: Subtract 2 from 1, 4: Multiply): ";
+            int op;
+            cin >> op;
+            switch (op)
+            {
+            case 1:
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                cout << "Sum of the polynomials: " << poly1.Evaluate(x) + poly2.Evaluate(x) << endl; // Обчислення суми многочленів
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                break;
+            case 2:
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                cout << "Result of polynomial 1 - polynomial 2: " << poly1.Evaluate(x) - poly2.Evaluate(x) << endl; // Обчислення різниці многочленів
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                break;
+            case 3:
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                cout << "Result of polynomial 2 - polynomial 1: " << poly2.Evaluate(x) - poly1.Evaluate(x) << endl; // Обчислення різниці многочленів
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                break;
+            case 4:
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                cout << "Multiply the polynomials: " << poly1.Evaluate(x) * poly2.Evaluate(x) << endl; // Обчислення добутку многочленів
+                cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
+                break;
+            default:
+                cout << "Bad choice bro. Please try again!" << endl; // Помилка вибору операції
+                break;
+            }
+            break;
+
+        case '7':
+            cout << "Goodbye! Have a good day!" << endl; 
+            break;
+
+        default:
+            cout << "Bad choice bro. Please try again!" << endl; // Помилка вибору
+        }
+    } while (choice != '7'); // Повторюємо цикл, доки не 7
+
+    return 0;
+}
