@@ -124,7 +124,7 @@ public:
         return maxCoeff;
     }
 
-    // Метод для сортування коефіцієнтів многочлена(ів)
+    // Метод для сортування коефіцієнтів многочленів
     void SortCofs()
     {
         if (coeffs == nullptr)
@@ -133,6 +133,7 @@ public:
             return;
         }
 
+        // Сортування коефіцієнтів за зростанням за допомогою алгоритму бульбашкового сортування
         for (int i = 0; i <= degree; ++i)
         {
             for (int j = 0; j < degree - i; ++j)
@@ -145,6 +146,14 @@ public:
                 }
             }
         }
+
+        cout << "Sorted coefficients: ";
+        for (int i = 0; i <= degree; ++i)
+        {
+            cout << coeffs[i] << " "; // Виведення відсортованих коефіцієнтів масиву
+        }
+        cout << endl;
+
         cout << "------------------------------------------------------------------------------------------------------------------------" << endl; // Помітка про завершення сортування
     }
 };
@@ -258,7 +267,7 @@ int main()
             break;
 
         case '7':
-            cout << "Goodbye! Have a good day!" << endl; 
+            cout << "Goodbye! Have a good day!" << endl;
             break;
 
         default:
