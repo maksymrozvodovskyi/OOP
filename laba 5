@@ -1,0 +1,91 @@
+#include <iostream>
+using namespace std;
+
+class Disk
+{
+protected:
+    string title;
+    string type;
+    int year;
+
+public:
+    Disk(string t, string ty, int y)
+    {
+        title = t;
+        type = ty;
+        year = y;
+    }
+
+    void Info()
+    {
+        cout << "Title: " << title << endl;
+        cout << "Type: " << type << endl;
+        cout << "Year: " << year << endl;
+    }
+
+    void add (string t, string ty, int y)
+    {
+        title = t;
+        type = ty;
+        year = y;
+    }
+
+    void delet()
+    {
+        title = " ";
+        type = " ";
+        year = 0;
+    }
+};
+
+class CD : public Disk
+{
+private:
+    string artist;
+    int tracksCount;
+
+public:
+    CD(string t, string ty, int y, string a, int tc) : Disk(t, ty, y)
+    {
+        artist = a;
+        tracksCount = tc;
+    }
+
+    void Info()
+    {
+        Disk::Info();
+        cout << "Artist: " << artist << endl;
+        cout << "Tracks Count: " << tracksCount << endl << endl;
+    }
+
+    void add(string t, string ty, int y, string a, int tc)
+    {
+        Disk::add(t, ty, y); 
+        artist = a;
+        tracksCount = tc;
+        cout << "Writing new info.." << endl;
+        cout << "Record added" << endl << endl;
+    }
+
+    void delet() 
+    {
+        Disk::delet();
+
+        artist = " ";
+        tracksCount = 0;
+
+        cout << "Record deleted" << endl << endl;
+    }
+};
+
+int main()
+{
+    CD cd1("Album 1", "Pop", 2020, "Artist 1", 10);
+    cd1.Info();
+
+    cd1.add("Album 2", "Rock", 2022, "Artist 2", 12);
+    cd1.Info();
+
+    cd1.delet();
+    cd1.Info();
+}
