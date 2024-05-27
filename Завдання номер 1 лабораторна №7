@@ -1,0 +1,191 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+template <typename T>
+class MatrixBase
+{
+public:
+    virtual ~MatrixBase() {}
+    virtual void setElement(int r, int c, T value) = 0;
+    virtual T getElement(int r, int c) const = 0;
+    virtual int countZeros() const = 0;
+    virtual T sumRange(T A, T B) const = 0;
+    virtual void sort() = 0;
+    virtual void print() const = 0;
+};
+
+template <typename T>
+class Matrix : public MatrixBase<T>
+{
+private:
+    vector<vector<T>> data;
+    int rows;
+    int cols;
+
+public:
+    Matrix(int r, int c) : rows(r), cols(c)
+    {
+        data.resize(rows, vector<T>(cols));
+    }
+
+    void setElement(int r, int c, T value) override
+    {
+        if (r >= 0 && r < rows && c >= 0 && c < cols) {
+            data[r][c] = value;
+        }
+    }
+
+    T getElement(int r, int c) const override
+    {
+        if (r >= 0 && r < rows && c >= 0 && c < cols)
+        {
+            return data[r][c];
+        }
+        return T();
+    }
+
+    int countZeros() const override
+    {
+        int count = 0;
+        for (const auto& row : data)
+        {
+            count += std::count(row.begin(), row.end(), T());
+        }
+        return count;
+    }
+
+    T sumRange(T A, T B) const override
+    {
+        T sum = T();
+        for (const auto& row : data)
+        {
+            for (T value : row)
+            {
+                if (value >= A && value <= B)
+                {
+                    sum = sum + value;
+                }
+            }
+        }
+        return sum;
+    }
+
+    void sort() override
+    {
+        vector<T> elements;
+        for (const auto& row : data)
+        {
+            for (T value : row)
+            {
+                elements.push_back(value);
+            }
+        }
+
+        std::sort(elements.begin(), elements.end(), [](T a, T b)
+            {
+                return std::abs(a) > std::abs(b);
+            });
+
+        int index = 0;
+        for (auto& row : data)
+        {
+            for (auto& value : row)
+            {
+                value = elements[index++];
+            }
+        }
+    }
+
+    void print() const override
+    {
+        for (const auto& row : data)
+        {
+            for (T value : row)
+            {
+                cout << value << " ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+void displayMenu()
+{
+    cout << "\nMenu:\n";
+    cout << "1. Set an element\n";
+    cout << "2. Print the matrix\n";
+    cout << "3. Count zero elements\n";
+    cout << "4. Sum elements in a range\n";
+    cout << "5. Sort matrix by absolute values\n";
+    cout << "6. Exit\n";
+    cout << "Enter your choice: ";
+}
+
+int main()
+{
+    int rows = 3;
+    int cols = 3;
+    Matrix<int> mat(rows, cols);
+
+    int choice;
+    do {
+        displayMenu();
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+        {
+            int r, c, value;
+            cout << "Enter row, column and value: ";
+            cin >> r >> c >> value;
+            mat.setElement(r, c, value);
+            break;
+        }
+        case 2:
+        {
+            cout << "Matrix:" << endl;
+            mat.print();
+            break;
+        }
+        case 3:
+        {
+            int zeroCount = mat.countZeros();
+            cout << "Number of zero elements: " << zeroCount << endl;
+            break;
+        }
+        case 4:
+        {
+            int A, B;
+            cout << "Enter range A and B: ";
+            cin >> A >> B;
+            int sum = mat.sumRange(A, B);
+            cout << "Sum of elements in range [" << A << ", " << B << "]: " << sum << endl;
+            break;
+        }
+        case 5:
+        {
+            mat.sort();
+            cout << "Matrix after sorting by absolute values:" << endl;
+            mat.print();
+            break;
+        }
+        case 6:
+        {
+            cout << "Exiting.." << endl;
+            break;
+        }
+        default:
+        {
+            cout << "Try again!" << endl;
+            break;
+        }
+        }
+    } while (choice != 6);
+
+    return 0;
+}
