@@ -1,0 +1,103 @@
+#include <iostream>  
+#include <vector>    
+#include <string>    
+#include <algorithm> // бібліотека для алгоритму find_if
+
+using namespace std; 
+
+class Book
+{
+public:
+    string udc_code;
+    string title;    
+    string author;  
+    int year;     
+    int pages;       
+
+    Book(string udc, string t, string a, int y, int p)
+        : udc_code(udc), title(t), author(a), year(y), pages(p) {}
+
+    void display() const 
+    {
+        cout << "UDC Code: " << udc_code << ", Title: " << title
+            << ", Author: " << author << ", Year: " << year
+            << ", Pages: " << pages << endl;
+    }
+};
+
+
+class Library
+{
+private:
+    vector<Book> books; 
+
+public:
+    void addBook(Book book) 
+    {
+        books.push_back(book);
+    }
+
+    void removeBookByTitle(string tit)
+    {
+        for (auto it = books.begin(); it != books.end(); ++it)
+        {
+            if (it->title == tit) // якщо назва книги співпадає
+            { 
+                books.erase(it); // то видаляємо книгу з вектора
+                break; 
+            }
+        }
+    }
+
+    
+    Book* findBookByUDC(string udc) 
+    {
+        for (auto& book : books)
+        { 
+            if (book.udc_code == udc) // якщо співпадає
+            { 
+                return &book;  // то повертаємо вказівник на знайдену книгу
+            }
+        }
+        return nullptr; // якщо книгу не знайдено повертаємо nullptr
+    }
+
+   
+    void displayBooks()
+    {
+        for (const auto& book : books)
+        { 
+            book.display(); 
+        }
+    }
+};
+
+int main()
+{
+    Library library; 
+
+   
+    library.addBook({ "001.891", "Artificial Intelligence: A Modern Approach", "Stuart Russell, Peter Norvig", 2010, 1152 });
+    library.addBook({ "005.133", "Clean Code: A Handbook of Agile Software Craftsmanship", "Robert C. Martin", 2008, 464 });
+    library.addBook({ "004.021", "Introduction to the Theory of Computation", "Michael Sipser", 2012, 504 });
+    library.addBook({ "005.1", "Design Patterns: Elements of Reusable Object-Oriented Software", "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides", 1994, 395 });
+    library.addBook({ "006.3", "Deep Learning", "Ian Goodfellow, Yoshua Bengio, Aaron Courville", 2016, 775 });
+    library.addBook({ "005.8", "Computer Security", "Dieter Gollmann", 2010, 456 });
+
+    library.removeBookByTitle("Clean Code: A Handbook of Agile Software Craftsmanship");
+
+    Book* book = library.findBookByUDC("004.021");
+    if (book)
+    { 
+        cout << "Book found: ";
+        book->display();
+        book->year = 2021; 
+    }
+    else
+    {
+        cout << "Book not found." << endl;
+    }
+
+    cout << "\nList:" << endl;
+    library.displayBooks();
+}
